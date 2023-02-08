@@ -1,39 +1,87 @@
-let form = document.getElementById("form");
+//async and await in javascript
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  let pid = document.getElementById("productID").value;
-  let sp = document.getElementById("sp").value;
-  let pname = document.getElementById("productName").value;
-  let data = {
-    productid: pid,
-    sellingPrice: sp,
-    productName: pname,
-  };
+// const wifeBringingTickets = new Promise((resolve, reject) => {
+//   setTimeout(() => {
+//     resolve("ticket");
+//   }, 3000);
+// });
 
-  console.log(pid);
+// console.log("person1 : ticket");
+// console.log("person2 : ticket");
 
-  let total = document.getElementById("total");
-  total.innerHTML = parseInt(total.innerHTML) + parseInt(sp);
-  localStorage.setItem(pid, JSON.stringify(data));
+// const getPopcorn = wifeBringingTickets.then((t) => {
+//   console.log(`person3 : ${t}`);
+//   console.log(`wife : I need foood`);
+//   return new Promise((resolve, reject) => resolve(`${t} popcorn`));
+// });
 
-  const node = document.createElement("li");
-  node.setAttribute("id", pid);
-  const textnode = document.createTextNode(`${pname} - ${sp}`);
-  node.appendChild(textnode);
+// const getButter = getPopcorn.then((t) => {
+//   console.log(`${t}`);
+//   console.log("husband: lets go in");
+//   console.log("wife: I need chips");
+//   return new Promise((resolve, reject) => {
+//     resolve(`${t} chips`);
+//   });
+// });
 
-  const but = document.createElement("BUTTON");
-  but.setAttribute("onclick", `deleteItem(${pid})`);
-  const textnodebut = document.createTextNode("delete");
-  but.appendChild(textnodebut);
+// getButter.then((t) => {
+//   console.log(`${t}`);
+//   console.log(`wife : let's go in`);
+// });
 
-  node.appendChild(but);
-  document.getElementById("myList").appendChild(node);
-});
+// console.log("person4 : ticket");
+// console.log("person5 : ticket");
 
-function deleteItem(pid) {
-  const element = document.getElementById(pid.id);
-  element.remove();
-  localStorage.removeItem(pid.id);
-  console.log(pid.id);
-}
+/*
+
+async function always returns a promise.
+await can be only used inside async
+*/
+
+console.log("person1 : ticket");
+console.log("person2 : ticket");
+
+const premovie = async () => {
+  const wifeBringingTickets = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("wife brings ticket");
+    }, 3000);
+  });
+
+  const getpopcorn = new Promise((resolve, reject) =>
+    resolve("husband brings popcorn")
+  );
+  const getChips = new Promise((resolve, reject) => {
+    resolve(`husband brings chips`);
+  });
+
+  const getColdDrinks = new Promise((resolve, reject) => {
+    resolve(`husband brings coke`);
+  });
+
+  const ticket = await wifeBringingTickets; //as we use await we dont need to use .then
+  //the promise returns the value of resolve..
+  console.log(`husbund brings : ${ticket}`);
+  console.log(`wife : I need foood`);
+
+  const popcorn = await getpopcorn; //
+
+  console.log(popcorn);
+  console.log("husband: lets go in");
+  console.log("wife: I need chips");
+
+  chips = await getChips;
+  console.log(chips);
+  console.log("husband: lets go in");
+  console.log("wife: I want cold Drinks");
+
+  const coldDrinks = await getColdDrinks;
+  console.log(coldDrinks);
+
+  return "all done";
+};
+
+premovie().then((t) => console.log(t)); //the returned value from the async function acts like resolved value.
+
+console.log("person4 : ticket");
+console.log("person5 : ticket");

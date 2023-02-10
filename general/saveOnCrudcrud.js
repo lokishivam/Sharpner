@@ -1,0 +1,83 @@
+const name = document.getElementById("name");
+const email = document.getElementById("email");
+const btn = document.getElementById("btn");
+const phone = document.getElementById("phone");
+const list = document.getElementById("users");
+
+function formhandler(e) {
+  e.preventDefault();
+
+  const obj = {
+    name: e.target.name.value,
+    email: e.target.email.value,
+    phone: e.target.phone.value,
+  };
+  const li = document.createElement("li");
+  const button = document.createElement("button");
+  const button2 = document.createElement("button");
+  button.innerText = "delete";
+  button.className = "delete";
+  button2.innerText = "edit";
+  button2.className = "edit";
+  li.innerText = `${name.value}-${email.value}-${phone.value}`;
+  li.appendChild(button);
+  li.appendChild(button2);
+  list.appendChild(li);
+  name.value = "";
+  email.value = "";
+  phone.value = "";
+  axios
+    .post(
+      "https://crudcrud.com/api/b3aa010833bc4ed1b399fdcad4b8c6ab/appointments",
+      obj
+    )
+    .then((res) => {
+      let returnedID = res.data._id;
+      li.id = returnedID;
+    })
+    .catch((err) => console.log(err));
+}
+
+list.addEventListener("click", (e) => {
+  if (e.target.classList.contains("delete")) {
+    const par = e.target.parentElement;
+    let id = par.id;
+    axios.delete(
+      `https://crudcrud.com/api/b3aa010833bc4ed1b399fdcad4b8c6ab/appointments/${id}`
+    );
+    par.remove();
+  }
+  if (e.target.classList.contains("edit")) {
+    const par = e.target.parentElement;
+    let id = par.id;
+    axios
+      .get()
+      .then((res) => {
+        let user = res.data;
+        name.value = user.name;
+        email.value = user.email;
+        phone.value = user.phone;
+        par.remove();
+      })
+      .catch();
+  }
+});
+
+window.addEventListener("DOMContentLoaded", function () {
+  for (let key in localStorage) {
+    let user = JSON.parse(localStorage.getItem(key));
+    if (user != null) {
+      const li = document.createElement("li");
+      const button = document.createElement("button");
+      const button2 = document.createElement("button");
+      button.innerText = "delete";
+      button.className = "delete";
+      button2.innerText = "edit";
+      button2.className = "edit";
+      li.innerText = `${user.name}-${user.email}-${user.phone}`;
+      li.appendChild(button);
+      li.appendChild(button2);
+      list.appendChild(li);
+    }
+  }
+});

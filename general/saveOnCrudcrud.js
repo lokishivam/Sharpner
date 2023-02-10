@@ -64,20 +64,25 @@ list.addEventListener("click", (e) => {
 });
 
 window.addEventListener("DOMContentLoaded", function () {
-  for (let key in localStorage) {
-    let user = JSON.parse(localStorage.getItem(key));
-    if (user != null) {
-      const li = document.createElement("li");
-      const button = document.createElement("button");
-      const button2 = document.createElement("button");
-      button.innerText = "delete";
-      button.className = "delete";
-      button2.innerText = "edit";
-      button2.className = "edit";
-      li.innerText = `${user.name}-${user.email}-${user.phone}`;
-      li.appendChild(button);
-      li.appendChild(button2);
-      list.appendChild(li);
-    }
-  }
+  axios
+    .get(
+      "https://crudcrud.com/api/b3aa010833bc4ed1b399fdcad4b8c6ab/appointments"
+    )
+    .then((res) => {
+      for (let obj of res.data) {
+        const li = document.createElement("li");
+        li.id = obj._id;
+        const button = document.createElement("button");
+        const button2 = document.createElement("button");
+        button.innerText = "delete";
+        button.className = "delete";
+        button2.innerText = "edit";
+        button2.className = "edit";
+        li.innerText = `${obj.name}-${obj.email}-${obj.phone}`;
+        li.appendChild(button);
+        li.appendChild(button2);
+        list.appendChild(li);
+      }
+    })
+    .catch();
 });
